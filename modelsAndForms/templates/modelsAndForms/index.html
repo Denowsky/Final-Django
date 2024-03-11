@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% block content %}
+    <h1>Посмотреть заказы клиента</h1>
+    <form action="orders/" method="post">
+        {% csrf_token %}
+        <label for="client_id">ID клиента:</label>
+        <input type="number" name="client_id">
+        <input type="submit" value="Вывести">
+    </form>
+    <hr>
+    <h1>Изменить товар</h1>
+    <form action="product/" method="post">
+        {% csrf_token %}
+        <label for="product_id">ID товара:</label>
+        <input type="number" name="product_id">
+        <input type="submit" value="Открыть товар">
+    </form>
+    {% endblock content %}
+</body>
+
+</html>
