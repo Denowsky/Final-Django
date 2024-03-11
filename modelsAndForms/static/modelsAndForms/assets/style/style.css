@@ -1,0 +1,104 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+/* Контейнер */
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Боковая панель */
+
+.sidebar {
+  width: 250px;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style-type: disc;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #000;
+}
+
+/* Контент */
+
+.content {
+  flex: 1;
+  position: relative;
+}
+
+
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.tips {
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.tips h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.tips ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tips li {
+  margin-bottom: 10px;
+}
+
+/* Футер */
+
+footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+footer a {
+  color: #fff;
+}

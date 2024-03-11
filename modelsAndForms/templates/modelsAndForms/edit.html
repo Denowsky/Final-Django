@@ -1,0 +1,10 @@
+{% extends "modelsAndForms/index.html" %}
+
+{% block content %}
+<h1>Рецепт: {{ recipe.name }}</h1>
+<form action="save/{{ product_id }}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Отправить">
+    </form>
+{% endblock content %}

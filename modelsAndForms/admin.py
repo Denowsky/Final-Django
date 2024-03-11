@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Recipe, Category, User
+from .models import Recipe, Category, User, Ingredient
 
 # Register your models here.
 
 
 @admin.register(User)
-class ClientAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'password']
     fieldsets = [
         (
@@ -19,14 +19,10 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 @admin.register(Recipe)
-class ProductAdmin(admin.ModelAdmin):
+class RecipeAdmin(admin.ModelAdmin):
     list_display = ['name',
-                    'description',
-                    'steps',
-                    'time',
                     'image',
                     'author',
-                    'ingredient',
                     'category'
                     ]
     list_filter = ['category']
@@ -42,41 +38,46 @@ class ProductAdmin(admin.ModelAdmin):
             }
         ),
         (
-            'Дополнительная информация',
-            {
-                'classes': ['collapse'],
-                'fields': ['description', 'image']
-            }
-        ),
-        (
             'Ингредиенты и время приготовления',
             {
                 'fields': ['ingredient', 'time']
+            }
+        ),
+                (
+            'Дополнительная информация',
+            {
+                'classes': ['collapse'],
+                'fields': ['description', 'steps', 'image']
             }
         ),
     ]
 
 
 @admin.register(Category)
-class OrderAdmin(admin.ModelAdmin):
-    readonly_fields = ['total_price', 'date_ordered']
+class CategoryAdmin(admin.ModelAdmin):
     fieldsets = [
         (
-            'Клиент',
+            'Категории',
             {
-                'fields': ['client']
+                'fields': ['category_name']
             }
         ),
+    ]
+
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    fieldsets = [
         (
             'Продукт',
             {
-                'fields': ['products']
+                'fields': ['ing_name']
             }
         ),
-        (
-            'Сумма и дата заказа',
+                (
+            'Калории',
             {
-                'fields': ['total_price', 'date_ordered']
+                'fields': ['kcal']
             }
         ),
+        
     ]
