@@ -28,7 +28,6 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ['category']
     search_fields = ['description']
     search_help_text = 'Поиск по описанию'
-    readonly_fields = ['author']
     fieldsets = [
         (
             'Основная информация',
@@ -43,7 +42,7 @@ class RecipeAdmin(admin.ModelAdmin):
                 'fields': ['ingredient', 'time']
             }
         ),
-                (
+        (
             'Дополнительная информация',
             {
                 'classes': ['collapse'],
@@ -64,8 +63,10 @@ class CategoryAdmin(admin.ModelAdmin):
         ),
     ]
 
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
+    list_display = ['ing_name', 'kcal']
     fieldsets = [
         (
             'Продукт',
@@ -73,11 +74,11 @@ class IngredientAdmin(admin.ModelAdmin):
                 'fields': ['ing_name']
             }
         ),
-                (
+        (
             'Калории',
             {
                 'fields': ['kcal']
             }
         ),
-        
+
     ]
