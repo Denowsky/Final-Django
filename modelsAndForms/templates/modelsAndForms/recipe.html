@@ -7,5 +7,6 @@
 <p>Описание: {{ recipe.description }}</p>
 <p>Время приготовления: {{ recipe.time }}</p>
 <p>Ингредиенты: {{ recipe.ingredient }}</p>
+<a href="edit/{{ recipe.pk }}">Изменить</a>
 <a href="/">Вернуться</a>
 {% endblock content %}

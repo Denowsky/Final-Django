@@ -8,7 +8,7 @@ class Category(models.Model):
 
 class Ingredient(models.Model):
     ing_name = models.CharField(max_length=50)
-    kcal = models.IntegerField(max_length=10)
+    kcal = models.IntegerField()
 
 class Recipe(models.Model):
     name = models.CharField(max_length=50)

@@ -1,8 +1,8 @@
 {% extends "modelsAndForms/index.html" %}
 
 {% block content %}
-<h1>Регистрация:</h1>
-<form action="user" method="post" enctype="multipart/form-data">
+<h1>Вход:</h1>
+<form action="main" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Отправить">

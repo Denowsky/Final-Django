@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Recipe, Category, User
 from random import randint
-from .forms import RecipeForm, UserForm
+from .forms import RecipeForm, UserForm, UserLoginForm
 
 # Create your views here.
 #  Главная с 5 случайными рецептами кратко
@@ -12,7 +12,7 @@ from .forms import RecipeForm, UserForm
 # * *другие шаблоны на ваш выбор
 
 
-def index(request):
+def append_sidebar(user={'name': 'Гость'}):
     categories = Category.objects.all()
     recipes = Recipe.objects.all()
     result = []
@@ -20,35 +20,108 @@ def index(request):
         result.append(recipes[randint(0, len(recipes)-1)])
     context = {
         'categories': categories,
-        'recipes': result
+        'recipes': result,
+        'user': user
     }
+    return context
+
+
+def index(request):
+    context = append_sidebar()
     return render(request, "modelsAndForms/index.html", context)
 
+
+def recipe_edit_form(request, pk):
+    try:
+        recipe = get_object_or_404(Recipe, pk=pk)
+    except Exception:
+        return HttpResponse("")
+    form = RecipeForm(instance=recipe)
+    return render(request, 'modelsAndForms/edit.html', {'form': form, 'recipe_id': pk})
+
+
 def recipe_form(request):
+    form = RecipeForm()
+    return render(request, 'modelsAndForms/edit.html', {'form': form})
+
+
+def recipe_save_edited(request, pk=None):
     if request.method == 'POST':
-        try: 
-            pk = request.POST.get("recipe_id")
+        if pk == None:
+            recipe = Recipe
+        else:
             recipe = get_object_or_404(Recipe, pk=pk)
-        except Exception:
-            return HttpResponse("")
-        form = RecipeForm(instance=recipe)
-        return render(request, 'modelsAndForms/recipe.html', {'form': form, 'recipe_id' : pk})
-    
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe.name = form.cleaned_data['name']
+            recipe.description = form.cleaned_data['description']
+            recipe.steps = form.cleaned_data['steps']
+            recipe.time = form.cleaned_data['time']
+            recipe.image = form.cleaned_data['image']
+            # recipe.author = form.cleaned_data['author']
+            recipe.category = form.cleaned_data['category']
+            recipe.save()
+            for data in form.cleaned_data['ingredient']:
+                recipe.ingredient.add(data)
+            return HttpResponse("рецепт сохранён")
+        
+
+def recipe_save(request):
+    if request.method == 'POST':
+        recipe = Recipe()
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe.name = form.cleaned_data['name']
+            recipe.description = form.cleaned_data['description']
+            recipe.steps = form.cleaned_data['steps']
+            recipe.time = form.cleaned_data['time']
+            recipe.image = form.cleaned_data['image']
+            # recipe.author = form.cleaned_data['author']
+            recipe.category = form.cleaned_data['category']
+            recipe.save()
+            for data in form.cleaned_data['ingredient']:
+                recipe.ingredient.add(data)
+            return HttpResponse("рецепт сохранён")
+
 def user_form(request):
-        form = UserForm()
-        return render(request, 'modelsAndForms/register.html', {'form': form})
+    form = UserForm()
+    return render(request, 'modelsAndForms/register.html', {'form': form})
 
 
-def save_user(request, pk):
+def save_user(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
-        user = User.objects.get(pk=pk)
+        user = User()
         if form.is_valid():
             user.name = form.cleaned_data['name']
             user.email = form.cleaned_data['email']
             user.password = form.cleaned_data['password']
             user.save()
+            context = append_sidebar(user)
+            return render(request, "modelsAndForms/index.html", context)
+
 
 def look_recipe(request, pk):
     recipe = Recipe.objects.filter(pk=pk).first()
-    return render(request, 'modelsAndForms/recipe.html', {'recipe' : recipe})
+    return render(request, 'modelsAndForms/recipe.html', {'recipe': recipe})
+
+
+def login_form(request):
+    form = UserLoginForm()
+    return render(request, 'modelsAndForms/login.html', {'form': form})
+
+
+def login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = User.objects.filter(email=email).first()
+            if user and password == user.password:
+                context = append_sidebar(user)
+                return render(request, "modelsAndForms/index.html", context)
+            else:
+                return HttpResponse("Произошла ошибка при входе")
+        else:
+            return HttpResponse("Произошла ошибка в форме")

@@ -6,10 +6,8 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         exclude = [
-            'author'
+            'id'
         ]
-        # labels = {'name': 'Имя',
-        #           'email': 'Почта'}
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -17,3 +15,8 @@ class UserForm(forms.ModelForm):
         exclude = ['id']
         # labels = {'name': 'Имя',
         #           'email': 'Почта'}
+
+class UserLoginForm(forms.ModelForm):
+    class Meta:
+        model = User
+        exclude = ['id', 'name']
