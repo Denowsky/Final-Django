@@ -9,7 +9,6 @@ class Category(models.Model):
 class Ingredient(models.Model):
     ing_name = models.CharField(max_length=50)
     kcal = models.IntegerField()
-    count = models.IntegerField()
     def __str__(self) -> str:
         return self.ing_name
 
