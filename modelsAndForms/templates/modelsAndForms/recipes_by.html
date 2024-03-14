@@ -1,0 +1,11 @@
+{% extends "modelsAndForms/index.html" %}
+
+{% block content %}
+<h2>{{ category.name }}</h2>
+            <ul>
+                {% for recipe in recipes %}
+                    <li><a href="{% url 'recipe' recipe.pk %}">{{ recipe.name }}</a></li>
+                    {% endfor %}
+            </ul>
+<a href="/">Вернуться</a>
+{% endblock content %}

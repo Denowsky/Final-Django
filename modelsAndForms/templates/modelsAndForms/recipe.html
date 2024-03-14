@@ -6,7 +6,13 @@
 <h2>Автор: {{ recipe.author }}</h2>
 <p>Описание: {{ recipe.description }}</p>
 <p>Время приготовления: {{ recipe.time }}</p>
-<p>Ингредиенты: {{ recipe.ingredient }}</p>
-<a href="edit/{{ recipe.pk }}">Изменить</a>
+<p>Ингредиенты:
+<ul class="ingredient-ul">
+    {% for ingredient in recipe.ingredient.all %}
+    <li>{{ ingredient }}</li>
+    {% endfor %}
+</ul>
+</p>
 <a href="/">Вернуться</a>
+<a href="edit/{{ recipe.pk }}">Изменить</a>
 {% endblock content %}

@@ -16,8 +16,12 @@ def append_sidebar(user={'name': 'Гость'}):
     categories = Category.objects.all()
     recipes = Recipe.objects.all()
     result = []
+    random_index = randint(0, len(recipes)-1)
     for _ in range(5):
-        result.append(recipes[randint(0, len(recipes)-1)])
+        result.append(recipes[random_index])
+        if random_index == 0:
+            random_index = len(recipes)
+        random_index-=1
     context = {
         'categories': categories,
         'recipes': result,
@@ -58,13 +62,13 @@ def recipe_save_edited(request, pk=None):
             recipe.steps = form.cleaned_data['steps']
             recipe.time = form.cleaned_data['time']
             recipe.image = form.cleaned_data['image']
-            # recipe.author = form.cleaned_data['author']
+            recipe.author = form.cleaned_data['author']
             recipe.category = form.cleaned_data['category']
             recipe.save()
             for data in form.cleaned_data['ingredient']:
                 recipe.ingredient.add(data)
-            return HttpResponse("рецепт сохранён")
-        
+            return render(request, 'modelsAndForms/success.html', {'recipe.name': recipe.name})
+
 
 def recipe_save(request):
     if request.method == 'POST':
@@ -76,12 +80,12 @@ def recipe_save(request):
             recipe.steps = form.cleaned_data['steps']
             recipe.time = form.cleaned_data['time']
             recipe.image = form.cleaned_data['image']
-            # recipe.author = form.cleaned_data['author']
+            recipe.author = form.cleaned_data['author']
             recipe.category = form.cleaned_data['category']
             recipe.save()
             for data in form.cleaned_data['ingredient']:
                 recipe.ingredient.add(data)
-            return HttpResponse("рецепт сохранён")
+            return render(request, 'modelsAndForms/success.html', {'recipe.name': recipe.name})
 
 def user_form(request):
     form = UserForm()
@@ -96,9 +100,14 @@ def save_user(request):
             user.name = form.cleaned_data['name']
             user.email = form.cleaned_data['email']
             user.password = form.cleaned_data['password']
-            user.save()
-            context = append_sidebar(user)
-            return render(request, "modelsAndForms/index.html", context)
+            if not User.objects.filter(email=user.email):
+                # return HttpResponse("good")
+                user.save()
+                context = append_sidebar(user)
+                return render(request, "modelsAndForms/index.html", context)
+            else:
+                return HttpResponse('Юзер с таким email уже зарегестрирован')
+
 
 
 def look_recipe(request, pk):
@@ -125,3 +134,12 @@ def login(request):
                 return HttpResponse("Произошла ошибка при входе")
         else:
             return HttpResponse("Произошла ошибка в форме")
+
+def look_category(request, pk):
+    category = Category.objects.filter(pk=pk).first()
+    recipes = Recipe.objects.filter(category=category)
+    context = {
+        'recipes': recipes,
+        'category': category
+    }
+    return render(request, 'modelsAndForms/recipes_by.html', context)
